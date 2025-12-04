@@ -12,18 +12,15 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-
-// ----------------------------------------------------
-//  DB automatisch anlegen/migrieren (WICHTIG für Render)
-// ----------------------------------------------------
+// --- DB automatisch anlegen/migrieren ---
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); // erstellt StepUp.db, falls sie nicht existiert
+    db.Database.Migrate();
 }
-// ----------------------------------------------------
+// ----------------------------------------
 
-
+// Error Handling
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -32,14 +29,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// WICHTIG: statische Dateien (wwwroot)
+app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+// Standard-Route
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
-).WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
