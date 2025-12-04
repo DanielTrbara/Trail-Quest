@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+
+# SQLite database files
+Database/*.db
+Database/*.db-shm
+Database/*.db-wal
+*.db
+
+# User-specific files
+*.user
+*.swp
+*.swo
+*.vs/
+.vscode/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Logs
+*.log
+
+# Publish output
+out/

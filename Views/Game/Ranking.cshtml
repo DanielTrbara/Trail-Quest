@@ -1,0 +1,46 @@
+﻿@model IEnumerable<StepUp.Models.RankingEntryViewModel>
+
+@{
+    ViewData["Title"] = "Rangliste";
+}
+
+<div class="container mt-3">
+    @if (ViewBag.ScanMessage != null)
+    {
+        <div class="alert alert-info text-center">
+            @ViewBag.ScanMessage
+        </div>
+    }
+
+    <h2 class="text-center mb-3">Aktuelle Rangliste</h2>
+
+    <p class="text-muted small text-center mb-3">
+        Die Rangliste aktualisiert sich automatisch nach jedem Scan.
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle table-sm">
+            <thead>
+            <tr>
+                <th style="width: 70px;">Platz</th>
+                <th>Team</th>
+                <th class="text-end" style="width: 90px;">Punkte</th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                var place = 1;
+            }
+            @foreach (var entry in Model)
+            {
+                <tr class="@(entry.IsCurrentTeam ? "table-success" : "")">
+                    <td>@place</td>
+                    <td>@entry.TeamName</td>
+                    <td class="text-end">@entry.Points</td>
+                </tr>
+                place++;
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

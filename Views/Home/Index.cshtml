@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Trail Quest – Stadtrallye";
+}
+
+<div class="container mt-4">
+    <div class="row g-4">
+
+        <!-- Linke Seite: Erklärung -->
+        <div class="col-12 col-lg-8">
+            <h1 class="mb-3 text-center text-lg-start">
+                Willkommen bei <strong>Trail Quest</strong>
+            </h1>
+
+            <p class="lead text-center text-lg-start">
+                Trail Quest ist eine Stadtrallye mit QR-Codes. Sammle Punkte, indem du mit deinem Team
+                QR-Codes an verschiedenen Orten in der Stadt scannst.
+            </p>
+
+            <h3 class="mt-4">So funktioniert's</h3>
+            <ol class="mb-3">
+                <li>Such dir ein Team &amp; einen Teamnamen aus.</li>
+                <li>Scannt einen der QR-Codes in der Stadt.</li>
+                <li>Gebt auf der geöffneten Seite euren Teamnamen ein.</li>
+                <li>Ihr bekommt automatisch einen Punkt gutgeschrieben.</li>
+                <li>In der Rangliste seht ihr live, wo ihr steht.</li>
+            </ol>
+
+            <p>
+                Jeder QR-Code ist mit einer bestimmten Station verknüpft.
+                Ihr könnt die Stationen in beliebiger Reihenfolge besuchen.
+            </p>
+
+            <h3 class="mt-4">Karte &amp; Standorte</h3>
+            <p>
+                Hier könnt ihr eine Karte mit allen Stationen einbinden
+                (z.&nbsp;B. Screenshot von Google Maps oder eingebettete Karte).
+            </p>
+            <div class="border rounded p-3 bg-light mb-4">
+                <em>Platzhalter für Karte / Bild mit den Koordinaten der QR-Codes.</em>
+            </div>
+        </div>
+
+        <!-- Rechte Seite: Cards / Aktionen -->
+        <div class="col-12 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Rangliste anzeigen</h5>
+                    <p class="card-text">
+                        Hier seht ihr, welches Team aktuell vorne liegt.
+                    </p>
+                    <a asp-controller="Game" asp-action="Ranking" class="btn btn-primary w-100">
+                        Zur Rangliste
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">QR-Code gescannt?</h5>
+                    <p class="card-text">
+                        Wenn ihr einen QR-Code gescannt habt, landet ihr automatisch auf der Scan-Seite
+                        und könnt dort euren Teamnamen eingeben.
+                    </p>
+                    <p class="mb-0 small text-muted">
+                        Die Rangliste aktualisiert sich nach jedem Scan automatisch.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
