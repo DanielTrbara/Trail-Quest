@@ -3,28 +3,43 @@ using StepUp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ===============================
+// DB: NUR Postgres, kein Fallback
+// ===============================
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Wenn Render/Postgres vorhanden -> Postgres, sonst lokal SQLite
-if (!string.IsNullOrWhiteSpace(cs) && (cs.Contains("Host=", StringComparison.OrdinalIgnoreCase) || cs.StartsWith("postgres", StringComparison.OrdinalIgnoreCase)))
+if (string.IsNullOrWhiteSpace(cs))
 {
-    builder.Services.AddDbContext<AppDbContext>(o => o.UseNpgsql(cs));
-}
-else
-{
-    builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlite("Data Source=StepUp.db"));
+    throw new Exception(
+        "ConnectionStrings:DefaultConnection is missing. " +
+        "Postgres connection string must be provided via environment variables."
+    );
 }
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(cs);
+});
+
+// ===============================
+// MVC
+// ===============================
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// ===============================
+// DB Migration beim Start
+// ===============================
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
 
+// ===============================
+// Middleware
+// ===============================
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -33,9 +48,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 app.UseAuthorization();
 
+// ===============================
+// Routing
+// ===============================
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
