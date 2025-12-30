@@ -3,24 +3,28 @@ using StepUp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// === DB einrichten (SQLite) ===
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// MVC aktivieren
+// Wenn Render/Postgres vorhanden -> Postgres, sonst lokal SQLite
+if (!string.IsNullOrWhiteSpace(cs) && (cs.Contains("Host=", StringComparison.OrdinalIgnoreCase) || cs.StartsWith("postgres", StringComparison.OrdinalIgnoreCase)))
+{
+    builder.Services.AddDbContext<AppDbContext>(o => o.UseNpgsql(cs));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlite("Data Source=StepUp.db"));
+}
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// --- DB automatisch anlegen/migrieren ---
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
-// ----------------------------------------
 
-// Error Handling
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -28,15 +32,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// WICHTIG: statische Dateien (wwwroot)
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
-// Standard-Route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
