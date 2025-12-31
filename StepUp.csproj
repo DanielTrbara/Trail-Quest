@@ -19,4 +19,8 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\images\Karte.JPG" />
+    </ItemGroup>
+
 </Project>
